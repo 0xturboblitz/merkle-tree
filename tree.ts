@@ -20,12 +20,15 @@ class MerkleTree {
                 length++
             }
             for (let i = 0; i < length; i += 2) {
-                const array =  Uint8Array.from([...utils.arrayify(this.hashes[offset + i]), ...utils.arrayify(this.hashes[offset + i + 1])])
-                this.hashes.push(utils.keccak256(array))
+                this.hashes.push(this.hash(this.hashes[offset + i], this.hashes[offset + i + 1]))
             }
             offset += length
             length /= 2
         }
+    }
+
+    hash(a: string, b: string) {
+        return utils.keccak256(a + b.slice(2))
     }
 
     verify(leaf: string, proof: string[]) {
@@ -45,14 +48,12 @@ class MerkleTree {
 
 
 function example() {
-    let tree = new MerkleTree(["salut", "toi", "c'est", "moi", "et"])
+    const start = Date.now()
+    const arr = [...Array(100000).keys()]
+    let tree = new MerkleTree(arr.map(n => n.toString()))
+    console.log('durée :', Date.now() - start)
 
-    console.log('tree.hashes :', tree.hashes)
-    console.log(tree.verify("salut",
-    ["0xa0057ef29cc215d2dbacc6c77ce4b2fdf282d5dd0ae313de4b55a5163957707e",
-    "0x340135d068356183ba2c1d760a4781fcb4bf2018d0d7a398e5499c16b201ed8c",
-    "0x589669b0b47fc86d69d388081745420197ef7d306defde6932e1b54206507619"
-    ]))
+    // console.log('tree.hashes :', tree.hashes)
 }
 
 example()
