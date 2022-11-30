@@ -1,2 +1,2 @@
 # merkle 🌳
-Simple typescript implementation of a merkle 🌳
+Simple Typescript implementation of a merkle 🌳
